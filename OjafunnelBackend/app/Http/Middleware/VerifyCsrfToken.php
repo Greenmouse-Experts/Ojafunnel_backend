@@ -12,6 +12,8 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        'webhook/smile_identity',
+        'webhook/flutterwave',
+        'webhook/bitpowr',
     ];
 }

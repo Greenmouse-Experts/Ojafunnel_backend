@@ -1,5 +1,4 @@
 /node_modules
-/public/build
 /public/hot
 /public/storage
 /storage/*.key
@@ -7,10 +6,13 @@
 .env
 .env.backup
 .phpunit.result.cache
+docker-compose.override.yml
 Homestead.json
 Homestead.yaml
-auth.json
 npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+composer.lock
+/node_modules
+/database/migrations/2022_07_20_133740_create_coin_exchange_values_table.php
