@@ -5,6 +5,7 @@ namespace App\Listeners;
 use Exception;
 use App\Models\User;
 use App\Models\Tenant;
+use App\Classes\UserClass;
 use App\Models\UserDetail;
 use App\Events\UserEmailVerified;
 use Illuminate\Queue\InteractsWithQueue;
@@ -34,6 +35,11 @@ class UserEmailVerifiedListener implements ShouldQueue
      * @var UserDetail
      */
     private $UserDetail;
+    
+    /**
+     * @var userClass
+     */
+    private $userClass;
 
     /**
      * Create the event listener.
@@ -47,6 +53,7 @@ class UserEmailVerifiedListener implements ShouldQueue
         $this->user = new User();
         $this->UserDetail = new UserDetail();
         $this->tenant = new Tenant();
+        $this->userClass = new UserClass();
     }
 
     /**
@@ -74,7 +81,8 @@ class UserEmailVerifiedListener implements ShouldQueue
 
         $this->UserDetail->create([
             'user_id' => $user->id,
-            'slug' => date('Ymd').rand(000000,999999).date('His')
+            'slug' => date('Ymd').rand(000000,999999).date('His'),
+            'referral_code' => $this->userClass->generateReferralCode($user->subdomain)
         ]);
 
         

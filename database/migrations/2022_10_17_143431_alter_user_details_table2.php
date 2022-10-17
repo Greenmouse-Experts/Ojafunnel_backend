@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->bigInteger('referred_by')->nullable();
+        Schema::table('user_details', function (Blueprint $table) {
+            $table->string('referral_code')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('referred_by');
+        Schema::table('user_details', function (Blueprint $table) {
+            $table->dropColumn('referral_code');
         });
     }
 };

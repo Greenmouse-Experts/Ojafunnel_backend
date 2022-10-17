@@ -44,7 +44,7 @@ class UserClass
         //fetch referral from database
         $checkReferral = $this->validateReferralCode($referral_code);
         //check if referral code is unique
-        if ($checkReferral[0] === false) {
+        if ($checkReferral === null) {
             return $referral_code;
         }
 
@@ -54,11 +54,13 @@ class UserClass
 
     public function validateReferralCode($referralCode)
     {
-
-        $checkIfCodeExist = $this->userDetail::where('referral_code', $referralCode)->first();
-        if ($checkIfCodeExist != null) {
-            return [true, $checkIfCodeExist];
+        if($referralCode != null){
+            $checkIfCodeExist = $this->userDetail::where('referral_code', $referralCode)->first();
+            if ($checkIfCodeExist != null) {
+                return $checkIfCodeExist->user_id;
+            }
+            return null;
         }
-        return [false, 'Referral code does not exist'];
+        return null;
     }
 }

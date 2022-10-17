@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Models\User;
+use App\Classes\UserClass;
+use App\Models\UserDetail;
 use Illuminate\Support\Str;
 use App\Classes\CommonClass;
 use Illuminate\Http\Request;
 use App\Models\TokenActivity;
 use App\Events\UserEmailVerified;
 use App\Models\EmailVerification;
+//use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-//use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -54,6 +56,7 @@ class RegisterController extends BaseController
     {
         //$this->middleware('guest');
         $this->commonClass = new CommonClass();
+        $this->userClass = new UserClass();
     }
 
     /**
@@ -85,8 +88,9 @@ class RegisterController extends BaseController
             'password.regex' => 'Password must be more than 8 characters long, should contain at least 1 Uppercase, 1 Lowercase and  1 number',
         ];
         $validator = Validator::make($request->all(), [
-            'subdomain' => ['required', 'string', 'max:12', 'unique:users'],
+            'subdomain' => ['required', 'string', 'max:24', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required', 'string', 'max:20', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/'],
             'referral_code' => ['nullable', 'string'],
         ], $messages);
@@ -106,10 +110,14 @@ class RegisterController extends BaseController
 
         $message = "Successfully Registered";
 
+        //Verify referral Code
+        $referred_by_verify = $this->userClass->validateReferralCode($request->referral_code);
 
         $user = User::create([
             'email' => $validated['email'],
             'subdomain' => $validated['subdomain'],
+            'phone' => $request->phone,
+            'referred_by' => $referred_by_verify,
             'password' => Hash::make($validated['password']),
         ]);
         $data['email'] = $user->email;
