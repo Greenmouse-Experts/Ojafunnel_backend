@@ -13,6 +13,5 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
-composer.lock
 /node_modules
 /database/migrations/2022_07_20_133740_create_coin_exchange_values_table.php
